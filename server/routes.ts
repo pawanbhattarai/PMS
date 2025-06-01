@@ -501,6 +501,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Development route to reseed data (only in development)
+  if (process.env.NODE_ENV === "development") {
+    app.post("/api/dev/reseed", async (req, res) => {
+      try {
+        const { seedUsers } = await import("./seed");
+        await seedUsers();
+        res.json({ message: "Data reseeded successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to reseed data" });
+      }
+    });
+  }
+
   const httpServer = createServer(app);
   return httpServer;
 }
