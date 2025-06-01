@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage-new";
+import { authenticateUser } from "./auth";
 import { 
   insertUserSchema, insertBranchSchema, insertRoomSchema, insertGuestSchema,
   insertReservationSchema, insertMenuCategorySchema, insertMenuItemSchema,
@@ -50,8 +51,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, password } = req.body;
       
-      const user = await storage.getUserByEmail(email);
-      if (!user || user.password !== password) {
+      const user = await authenticateUser(email, password);
+      if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
