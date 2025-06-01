@@ -1,0 +1,102 @@
+Build a Property Management System (PMS) for a hotel and restaurant chain using:
+
+Frontend: React.js + Tailwind CSS or Material UI/ShadCN (fully responsive).
+
+Backend: Node.js with Express.js (RESTful APIs).
+
+Database: PostgreSQL using Sequelize or Prisma ORM.
+
+✅ Functional Features
+🏢 Multi-Branch Structure
+Each branch (hotel) operates independently.
+
+Super Admin: Manages all branches, analytics, settings, and users.
+
+Branch Admin: Manages only their assigned branch.
+
+Staff roles (Receptionist, Housekeeping, Restaurant, etc.) scoped to their branch.
+
+All data must be scoped by branch ID.
+
+👥 Role-Based Access (RBAC)
+Roles:
+
+Super Admin – Global access to everything.
+
+Branch Admin – Manage only their branch's rooms, bookings, guests, restaurant, etc.
+
+Staff Roles – Access specific to duties (Receptionist, Restaurant Staff, etc.).
+
+🛏️ Reservation System (Advanced Multi-Room Logic)
+Single Reservation → Multiple Rooms
+
+For each room in the reservation:
+
+Select individual check-in and check-out dates.
+
+Store details like guest info, room rate, taxes, and services per room.
+
+Show calendar availability per room type before assigning.
+
+Manage check-in/check-out status individually per room.
+
+Example use-case: Family books 3 rooms — 2 rooms for 2 nights, 1 room for 3 nights.
+
+🧾 Billing & Invoicing
+Auto-generate invoices per room or combined per reservation.
+
+Include restaurant orders, services, and taxes.
+
+Payment support: Cash, Card, Digital Wallets.
+
+🍽️ Restaurant Module
+Menu management with categories, items, and pricing.
+
+Room Service / Table Orders / Takeaway.
+
+Integration with room billing (if room-charged order).
+
+👤 Guest Management
+Guest profiles with booking history.
+
+Support for uploading ID documents.
+
+📦 Inventory Module
+Track hotel supplies (toiletries, linen) and restaurant inventory (ingredients).
+
+Per-branch stock control with alerts.
+
+📊 Reports & Analytics
+Super Admin: Global insights.
+
+Branch Admin: Branch-specific reports (occupancy, income, inventory use).
+
+Export to CSV/PDF.
+
+⚙️ Technical Features
+JWT Auth, password encryption, role/branch middleware.
+
+React Router + Redux/Context API.
+
+Form and API validation (Zod / Joi recommended).
+
+Clean, scalable code structure with modular separation.
+
+Fully responsive UI (mobile-first).
+
+RESTful API with proper error handling.
+
+Use .env for environment configs.
+
+🌟 Bonus Features
+Dark/Light mode toggle.
+
+QR code for guest check-in.
+
+PDF invoice generation.
+
+Multi-language support.
+
+Dashboard activity logs.
+
+Notification system (email/in-app).
