@@ -512,6 +512,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(500).json({ message: "Failed to reseed data" });
       }
     });
+
+    app.post("/api/dev/seed-room-types", requireAuth, async (req, res) => {
+      try {
+        if (!req.user?.branchId) {
+          return res.status(400).json({ message: "No branch ID found" });
+        }
+
+        // Check if room types already exist for this branch
+        const existingRoomTypes = await storage.getRoomTypesByBranch(req.user.branchId);
+        if (existingRoomTypes.length > 0) {
+          return res.json({ message: "Room types already exist for this branch", roomTypes: existingRoomTypes });
+        }
+
+        // Create room types for the user's branch
+        const standardType = await storage.createRoomType({
+          name: "Standard",
+          description: "Comfortable standard room with essential amenities",
+          baseRate: "100.00",
+          maxOccupancy: 2,
+          amenities: ["WiFi", "TV", "AC", "Private Bathroom"],
+          branchId: req.user.branchId,
+        });
+
+        const deluxeType = await storage.createRoomType({
+          name: "Deluxe",
+          description: "Spacious deluxe room with premium amenities",
+          baseRate: "150.00",
+          maxOccupancy: 4,
+          amenities: ["WiFi", "TV", "AC", "Mini Bar", "Room Service", "Balcony"],
+          branchId: req.user.branchId,
+        });
+
+        const suiteType = await storage.createRoomType({
+          name: "Executive Suite",
+          description: "Luxury executive suite with separate living area",
+          baseRate: "250.00",
+          maxOccupancy: 6,
+          amenities: ["WiFi", "TV", "AC", "Mini Bar", "Kitchenette", "Balcony", "Living Room", "Premium Toiletries"],
+          branchId: req.user.branchId,
+        });
+
+        res.json({ 
+          message: "Room types created successfully", 
+          roomTypes: [standardType, deluxeType, suiteType] 
+        });
+      } catch (error) {
+        console.error("Failed to seed room types:", error);
+        res.status(500).json({ message: "Failed to seed room types" });
+      }
+    });
   }
 
   const httpServer = createServer(app);

@@ -49,6 +49,8 @@ export async function seedUsers() {
   });
 
   // Create room types for the branch
+  console.log(`Creating room types for branch ${branch.id}`);
+  
   const standardType = await storage.createRoomType({
     name: "Standard",
     description: "Comfortable standard room with essential amenities",
@@ -75,6 +77,8 @@ export async function seedUsers() {
     amenities: ["WiFi", "TV", "AC", "Mini Bar", "Kitchenette", "Balcony", "Living Room", "Premium Toiletries"],
     branchId: branch.id,
   });
+
+  console.log(`Created room types: ${standardType.id}, ${deluxeType.id}, ${suiteType.id}`);
 
   // Create some sample rooms
   await storage.createRoom({
