@@ -7,6 +7,7 @@ import {
   insertRestaurantOrderSchema, insertInventoryItemSchema, insertInvoiceSchema
 } from "@shared/schema";
 import { z } from "zod";
+import "./types";
 
 // Simple auth middleware
 function requireAuth(req: any, res: any, next: any) {
