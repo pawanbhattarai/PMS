@@ -10,6 +10,9 @@ export function useAuth() {
     queryFn: () => getCurrentUser().then(res => res.user),
     retry: false,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const loginMutation = useMutation({

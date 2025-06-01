@@ -7,9 +7,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session configuration
+// Session configuration with PostgreSQL store
+import connectPgSimple from 'connect-pg-simple';
+import { pool } from './db';
+
+const PgSession = connectPgSimple(session);
+
 app.use(session({
-  secret: 'hotel-pms-secret-key',
+  store: new PgSession({
+    pool: pool,
+    tableName: 'session',
+    createTableIfMissing: true
+  }),
+  secret: process.env.SESSION_SECRET || 'hotel-pms-secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: {

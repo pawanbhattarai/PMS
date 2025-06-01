@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage-new";
 import { 
   insertUserSchema, insertBranchSchema, insertRoomSchema, insertGuestSchema,
   insertReservationSchema, insertMenuCategorySchema, insertMenuItemSchema,
@@ -66,6 +66,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/me", requireAuth, (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
     const { password: _, ...userWithoutPassword } = req.user;
     res.json({ user: userWithoutPassword });
   });
