@@ -9,14 +9,22 @@ import {
 import { z } from "zod";
 import "./types";
 
-// Simple auth middleware
-function requireAuth(req: any, res: any, next: any) {
-  const user = req.session?.user;
-  if (!user) {
+// Authentication middleware
+async function requireAuth(req: any, res: any, next: any) {
+  if (!req.session?.userId) {
     return res.status(401).json({ message: "Authentication required" });
   }
-  req.user = user;
-  next();
+  
+  try {
+    const user = await storage.getUser(req.session.userId);
+    if (!user) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
 }
 
 function requireRole(roles: string[]) {
@@ -51,7 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Account is inactive" });
       }
 
-      req.session.user = user;
+      req.session.userId = user.id;
       const { password: _, ...userWithoutPassword } = user;
       res.json({ user: userWithoutPassword });
     } catch (error) {
