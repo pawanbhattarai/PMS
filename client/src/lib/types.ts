@@ -80,6 +80,16 @@ export interface MenuItemWithCategory {
   };
 }
 
+export interface RoomType {
+  id: number;
+  name: string;
+  description?: string;
+  baseRate: string;
+  maxOccupancy: number;
+  amenities: string[];
+  branchId: number;
+}
+
 export interface InvoiceWithGuest {
   id: number;
   invoiceNumber: string;
