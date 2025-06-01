@@ -28,8 +28,7 @@ async function seedUsers() {
     await storage.createUser({
       email: 'admin@hotelchain.com',
       password: adminPassword,
-      firstName: 'Super',
-      lastName: 'Admin',
+      name: 'Super Admin',
       role: 'super_admin',
       branchId: branch.id,
       active: true
@@ -38,8 +37,7 @@ async function seedUsers() {
     await storage.createUser({
       email: 'downtown@hotelchain.com',
       password: branchPassword,
-      firstName: 'Branch',
-      lastName: 'Admin',
+      name: 'Branch Admin',
       role: 'branch_admin',
       branchId: branch.id,
       active: true
@@ -48,8 +46,7 @@ async function seedUsers() {
     await storage.createUser({
       email: 'reception@hotelchain.com',
       password: receptionPassword,
-      firstName: 'Reception',
-      lastName: 'Staff',
+      name: 'Reception Staff',
       role: 'receptionist',
       branchId: branch.id,
       active: true
