@@ -52,7 +52,35 @@ async function seedUsers() {
       active: true
     });
 
-    console.log('Demo users created successfully');
+    // Create room types for the branch
+    await storage.createRoomType({
+      name: 'Standard Room',
+      description: 'Comfortable standard room with basic amenities',
+      baseRate: '100.00',
+      maxOccupancy: 2,
+      amenities: ['WiFi', 'TV', 'AC'],
+      branchId: branch.id
+    });
+
+    await storage.createRoomType({
+      name: 'Deluxe Room',
+      description: 'Spacious deluxe room with premium amenities',
+      baseRate: '150.00',
+      maxOccupancy: 4,
+      amenities: ['WiFi', 'TV', 'AC', 'Mini Bar', 'Room Service'],
+      branchId: branch.id
+    });
+
+    await storage.createRoomType({
+      name: 'Executive Suite',
+      description: 'Luxury executive suite with all premium amenities',
+      baseRate: '250.00',
+      maxOccupancy: 6,
+      amenities: ['WiFi', 'TV', 'AC', 'Mini Bar', 'Room Service', 'Kitchenette', 'Balcony'],
+      branchId: branch.id
+    });
+
+    console.log('Demo users and room types created successfully');
   } catch (error) {
     console.error('Error seeding users:', error);
   }
