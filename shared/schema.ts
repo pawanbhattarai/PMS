@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, boolean, timestamp, decimal, json } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -227,6 +228,140 @@ export const insertInvoiceSchema = createInsertSchema(invoices).omit({
 });
 
 // Types
+// Relations
+export const userRelations = relations(users, ({ one }) => ({
+  branch: one(branches, {
+    fields: [users.branchId],
+    references: [branches.id],
+  }),
+}));
+
+export const branchRelations = relations(branches, ({ many }) => ({
+  users: many(users),
+  roomTypes: many(roomTypes),
+  rooms: many(rooms),
+  reservations: many(reservations),
+  menuCategories: many(menuCategories),
+  menuItems: many(menuItems),
+  restaurantOrders: many(restaurantOrders),
+  inventoryCategories: many(inventoryCategories),
+  inventoryItems: many(inventoryItems),
+  invoices: many(invoices),
+}));
+
+export const roomTypeRelations = relations(roomTypes, ({ one, many }) => ({
+  branch: one(branches, {
+    fields: [roomTypes.branchId],
+    references: [branches.id],
+  }),
+  rooms: many(rooms),
+}));
+
+export const roomRelations = relations(rooms, ({ one, many }) => ({
+  branch: one(branches, {
+    fields: [rooms.branchId],
+    references: [branches.id],
+  }),
+  roomType: one(roomTypes, {
+    fields: [rooms.roomTypeId],
+    references: [roomTypes.id],
+  }),
+  reservations: many(reservations),
+}));
+
+export const guestRelations = relations(guests, ({ many }) => ({
+  reservations: many(reservations),
+  restaurantOrders: many(restaurantOrders),
+  invoices: many(invoices),
+}));
+
+export const reservationRelations = relations(reservations, ({ one }) => ({
+  branch: one(branches, {
+    fields: [reservations.branchId],
+    references: [branches.id],
+  }),
+  guest: one(guests, {
+    fields: [reservations.guestId],
+    references: [guests.id],
+  }),
+  room: one(rooms, {
+    fields: [reservations.roomId],
+    references: [rooms.id],
+  }),
+  createdByUser: one(users, {
+    fields: [reservations.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const menuCategoryRelations = relations(menuCategories, ({ one, many }) => ({
+  branch: one(branches, {
+    fields: [menuCategories.branchId],
+    references: [branches.id],
+  }),
+  menuItems: many(menuItems),
+}));
+
+export const menuItemRelations = relations(menuItems, ({ one }) => ({
+  branch: one(branches, {
+    fields: [menuItems.branchId],
+    references: [branches.id],
+  }),
+  category: one(menuCategories, {
+    fields: [menuItems.categoryId],
+    references: [menuCategories.id],
+  }),
+}));
+
+export const restaurantOrderRelations = relations(restaurantOrders, ({ one }) => ({
+  branch: one(branches, {
+    fields: [restaurantOrders.branchId],
+    references: [branches.id],
+  }),
+  guest: one(guests, {
+    fields: [restaurantOrders.guestId],
+    references: [guests.id],
+  }),
+  createdByUser: one(users, {
+    fields: [restaurantOrders.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const inventoryCategoryRelations = relations(inventoryCategories, ({ one, many }) => ({
+  branch: one(branches, {
+    fields: [inventoryCategories.branchId],
+    references: [branches.id],
+  }),
+  inventoryItems: many(inventoryItems),
+}));
+
+export const inventoryItemRelations = relations(inventoryItems, ({ one }) => ({
+  branch: one(branches, {
+    fields: [inventoryItems.branchId],
+    references: [branches.id],
+  }),
+  category: one(inventoryCategories, {
+    fields: [inventoryItems.categoryId],
+    references: [inventoryCategories.id],
+  }),
+}));
+
+export const invoiceRelations = relations(invoices, ({ one }) => ({
+  branch: one(branches, {
+    fields: [invoices.branchId],
+    references: [branches.id],
+  }),
+  guest: one(guests, {
+    fields: [invoices.guestId],
+    references: [guests.id],
+  }),
+  createdByUser: one(users, {
+    fields: [invoices.createdBy],
+    references: [users.id],
+  }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Branch = typeof branches.$inferSelect;
