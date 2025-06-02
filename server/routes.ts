@@ -184,14 +184,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/room-types", requireAuth, async (req, res) => {
     try {
       const branchId = getBranchFilter(req.user, parseInt(req.query.branchId as string));
+      console.log(`Fetching room types for branch ${branchId}, user: ${req.user.email}`);
       
       if (branchId) {
         const roomTypes = await storage.getRoomTypesByBranch(branchId);
+        console.log(`Found ${roomTypes.length} room types:`, roomTypes);
         res.json(roomTypes);
       } else {
+        console.log("No branch ID, returning empty array");
         res.json([]);
       }
     } catch (error) {
+      console.error("Error fetching room types:", error);
       res.status(500).json({ message: "Failed to fetch room types" });
     }
   });
@@ -515,17 +519,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     app.post("/api/dev/seed-room-types", requireAuth, async (req, res) => {
       try {
+        console.log(`Seeding room types for user: ${req.user.email}, branch: ${req.user.branchId}`);
+        
         if (!req.user?.branchId) {
-          return res.status(400).json({ message: "No branch ID found" });
+          return res.status(400).json({ message: "No branch ID found for user" });
         }
 
         // Check if room types already exist for this branch
         const existingRoomTypes = await storage.getRoomTypesByBranch(req.user.branchId);
+        console.log(`Found ${existingRoomTypes.length} existing room types`);
+        
         if (existingRoomTypes.length > 0) {
           return res.json({ message: "Room types already exist for this branch", roomTypes: existingRoomTypes });
         }
 
         // Create room types for the user's branch
+        console.log(`Creating room types for branch ${req.user.branchId}`);
+        
         const standardType = await storage.createRoomType({
           name: "Standard",
           description: "Comfortable standard room with essential amenities",
@@ -553,13 +563,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
           branchId: req.user.branchId,
         });
 
+        console.log(`Created room types: ${standardType.id}, ${deluxeType.id}, ${suiteType.id}`);
+
         res.json({ 
           message: "Room types created successfully", 
           roomTypes: [standardType, deluxeType, suiteType] 
         });
       } catch (error) {
         console.error("Failed to seed room types:", error);
-        res.status(500).json({ message: "Failed to seed room types" });
+        res.status(500).json({ message: "Failed to seed room types", error: error.message });
       }
     });
   }
